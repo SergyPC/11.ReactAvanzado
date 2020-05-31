@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { getAds, getTags } from '../../js/api.js';
-// import { Link } from "react-router-dom";
-import { BrowserRouter as Router, Route, Link, Switch, withRouter } from "react-router-dom";
+//import { getAds, getTags } from '../../js/api.js';
+//import { BrowserRouter as Router, Route, Link, Switch, withRouter } from "react-router-dom";
 // import imgNoDisponible from '../../img/noDisponible.jpg'
-import { Card, CardColumns, Form, Col, Button }  from 'react-bootstrap';
+import { Form, Col, Button }  from 'react-bootstrap';
 
 export default class AdFilter extends Component {
     constructor(props) {
@@ -23,44 +22,6 @@ export default class AdFilter extends Component {
         };
     }
 
-    // loadTags = () => {
-    //     // console.log("Entramos en loadTags");
-    //     getTags()
-    //     //.then(data => console.log("loadTags (data):", data))
-    //     .then(data => this.setState({ tags: data }));
-    //     // console.log("this.state.tags:", this.state.tags);
-    //     // console.log("Salimos de loadTags");
-    // }
-
-    // loadAds = async (search) => {
-    //     // console.log("Entramos en loadAds");
-    //     // getAds(search)
-    //     // .then(data => this.setState({ data: data }));
-
-    //     console.log("Entro en loadAds - adFilter");
-
-    //     const ads = await getAds(search);
-    //     // if (ads.error) {
-    //     if (ads.error === 'Error: Not logged in') {
-    //         //alert('No está logado o su sesión ha expirado. Le redireccionamos a Log In para que lo vuelva a realizar.');
-    //         alert('You are not logged in, or your session has been expired. \n\nWe redirect you to Log In to do it again.');
-    //         this.props.history.push('/login');
-    //     }
-    //     else if (ads.error) {
-    //         console.log(ads.error);
-    //         alert('An unexpected error has occurred (Try again later).');
-    //         this.props.history.push('/login');
-    //     } else {
-    //         this.setState({
-    //             data: ads.results,
-    //     });
-    //     return ads.results;
-    //     }
-
-    //     // console.log("this.state.data (getAds):", this.state.data);
-    //     // console.log("Salimos de getAds");
-    // }
-
     handleChange = event => {
         const value = event.target.value;
         const name = event.target.name;
@@ -68,24 +29,12 @@ export default class AdFilter extends Component {
             params:{...this.state.params, [name]: value}
         })
         sessionStorage.setItem(name,value);
-    }
+    };
 
     sendSearch = event => {
         event.preventDefault();
-
-        // console.log("this.state.params (adFilter):",this.state.params);
-
         const {name, minPrice, maxPrice, venta, tag} = this.state.params;
 
-        // console.log("Entramos en sendSearch");
-        // console.log("this.state.params (sendSearch):", this.state.params)
-        // console.log("name (sendSearch):", name)
-        // console.log("venta (sendSearch):", venta)
-        // console.log("tag (sendSearch):", tag)
-
-        // let queryParams =`price=${this.state.params.minPrice}-${this.state.params.maxPrice}&venta=${this.state.params.venta}`;
-        // if(this.state.params.name) {queryParams = queryParams + `&name=${this.state.params.name}`}
-        
         let queryParams = "true";
 
         queryParams = name !== '' ? queryParams += `&name=${name}` : queryParams += '';
@@ -101,23 +50,17 @@ export default class AdFilter extends Component {
         }
 
         this.setState({search: queryParams});
-        this.props.history.push(`/adsBoard?${queryParams}`);
+        this.props.props.history.push(`/adsBoard?${queryParams}`);
         sessionStorage.setItem("search", queryParams);
-
-        this.props.loadAds(queryParams);
-
-        // console.log("Salimos de sendSearch");
-
+        this.props.props.fetchAds(queryParams);
     }
 
     goToEditAd = (id) => {
-        this.props.history.push(`/editAd/id=${id}`);
+        this.props.props.history.push(`/editAd/id=${id}`);
     }
 
     goToCreateAd = (id) => {
-        // console.log ("this.props", this.props);
-        // console.log ("this.props.history", this.props.history);
-        this.props.history.push(`/createAd`);
+        this.props.props.history.push(`/createAd`);
     }
 
     clearFilter = () => {
@@ -130,35 +73,26 @@ export default class AdFilter extends Component {
                 tag: '',
             }
         })
-        sessionStorage.clear();
-        // sessionStorage.removeItem(name);
-        this.props.history.push(`/adsBoard?`);
-        this.props.loadAds('');
+        // sessionStorage.clear();
+        sessionStorage.removeItem('name');
+        sessionStorage.removeItem('minPrice');
+        sessionStorage.removeItem('maxPrice');
+        sessionStorage.removeItem('venta');
+        sessionStorage.removeItem('tag');
+        this.props.props.history.push(`/adsBoard?`);
+        this.props.props.fetchAds('');
     }
 
     returnToLogin = () => {
         sessionStorage.clear();
-        this.props.history.push(`/login`);
+        this.props.props.history.push(`/login`);
     }
 
     render() {
-        // console.log("this.state.params (render):", this.state.params)
-        // console.log("this.state.tags (render):", this.state.tags)
-        
         const {name, minPrice, maxPrice, venta, tag} = this.state.params;
-
         return (
-        // console.log("this.state.params (render):", this.state.params)
-        // console.log("this.state.tags (render):", this.state.tags)
-        
-        //const {name, minPrice, maxPrice, venta, tag} = this.state.params;
-
-        
-            // <FilterBar data={this.state.data}/> --> convertirlo en componente de filtro
             <div>
-
                 <form onSubmit={this.sendSearch}>
-                    
                     <Form.Group controlId="exampleForm.ControlSelect1">
 
                         <Form.Row>
@@ -255,11 +189,8 @@ export default class AdFilter extends Component {
                         </Form.Row>
 
                     </Form.Group>
-
                 </form>
-
             </div>
-        
         )
     }
 }

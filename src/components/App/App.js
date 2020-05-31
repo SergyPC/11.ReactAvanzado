@@ -1,71 +1,68 @@
-import React from 'react';
-//import React, { useEffect, Component} from 'react';
-//import logo from './logo.svg';
-//import './css/reset.css';
-// import './App.css';
-
-// import {
-//   BrowserRouter as Router,
-//   Route,
-//   Link,
-//   Switch,
-//   Redirect,
-//   withRouter
-// } from "react-router-dom";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from "react-router-dom";
-
-import Login from '../Login/login';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import PrivateRoute from '../PrivateRoute/PrivateRoute'
+import Login from '../Login';
 import Register from '../Register/register';
-import AdsBoard from '../AdsBoard/adsBoard';
+import AdsBoard from '../AdsBoard';
 import Detail from '../Detail/detail';
 import CreateAd from '../CreateAd/createAd';
 import EditAd from '../EditAd/editAd';
-//import Navbarr from './components/navbar';
 
-//import api from './js/api.js';
+class App extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-function App() {
+  componentDidMount() {
+    if(this.props.isLogged) {
+      this.loadTags();
+    };
+  }
+ 
+  loadAds() {
+    this.props.loadAds();
+  }
 
-  return (
-    <div className="App">
-      {/* <header className="App-header"> */}
-        {/* <!-- navbar --> */}
-        {/* <nav id="navbar" class="app-navbar"> */}
-          {/* <div class="navbar-logo"> */}
-            {/* <a href="/" alt="GUAGUA POP">GUAGUA POP</a>
-            <br /> */}
-            {/* <h1>GUAGUAPOP</h1> */}
-          {/* </div> */}
-        {/* </nav> */}
-        {/* <!-- navbar-end --> */}
-        {/* <h1>GuaGuaPop</h1> */}
-      {/* </header> */}
-      
-      <main>
-      <section id="detailSection" className="detail-section">
-        <Router>
-          <Switch>
-            <Route path="/register" component={Register} />
-            <Route path="/login" component={Login} />
-            <Route exact path="/editAd/id=:_id" component={EditAd} />
-            <Route exact path="/adsBoard/:_id" component={Detail} />
-            <Route path="/adsBoard" component={AdsBoard} />
-            <Route path="/createAd" component={CreateAd} />
-            <Redirect to="/adsBoard" />
-          </Switch>
-        </Router>
-
+  loadTags() {
+    this.props.loadTags()
+  }
+ 
+  render () {
+    return (
+      <div className="App">
+        {/* <header className="App-header"> */}
+          {/* <!-- navbar --> */}
+          {/* <nav id="navbar" class="app-navbar"> */}
+            {/* <div class="navbar-logo"> */}
+              {/* <a href="/" alt="GUAGUA POP">GUAGUA POP</a>
+              <br /> */}
+              {/* <h1>GUAGUAPOP</h1> */}
+            {/* </div> */}
+          {/* </nav> */}
+          {/* <!-- navbar-end --> */}
+          {/* <h1>GuaGuaPop</h1> */}
+        {/* </header> */}
         
-      </section>
-      </main>
-    </div>
-  );
+        <main>
+          <section id="detailSection" className="detail-section">
+            <Router>
+              <Switch>
+                <Route path="/login" component={Login} />
+                <Route path="/register" component={Register} />
+                <PrivateRoute exact path="/editAd/id=:_id" component={EditAd} />
+                <PrivateRoute exact path="/adsBoard/:_id" component={Detail} />
+                <PrivateRoute path="/adsBoard" component={AdsBoard} />
+                <PrivateRoute path="/createAd" component={CreateAd} />
+                <Redirect to="/login" />
+                {/* <Redirect to="/adsBoard" /> */}
+                {/* Podríamos redirigir a una página de error */}
+              </Switch>
+            </Router>
+          </section>
+        </main>
+      </div>
+    );
+  }
 }
 
 export default App;

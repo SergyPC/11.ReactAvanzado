@@ -1,28 +1,17 @@
-# WallaKeep
-
-## Install Scripts
-
-**Install React:** 
-<br />
-npx create-react-app app-wallakeep
-
-**Install react-router-dom:** 
-<br />
-npm install react-router-dom
-
-<!-- **Install axios:** 
-<br />
-npm install --save axios -->
-
-
-#
-
+# WallaKeep (Práctia de React Avanzado)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+#
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+**install dependencies:**
+```shell
+npm install
+```
 
 ### `npm start`
 
@@ -37,52 +26,52 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.<br />
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+#
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Practice objectives:
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Para esta práctica usaremos de punto de inicio la práctica que se realizó en el modulo de React (Wallakeep). En caso de no disponer de una práctica para empezar, se puede utilizar esta:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+https://github.com/davidjj76/keepcoding-react-wallakeep
 
-### `npm run eject`
+<br />
+Objectives:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+1. Configurar un store Redux donde se almacenará al menos la siguiente información:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    a. Información sobre la sessión o el usuario registrado en el sistema. Al iniciar la aplicación se deberá leer la información del usuario desde el LocalStorage (si existiese) y se almacenará en el store de Redux. Al registrarse un usuario su información deberá guardarse tanto en el store de Redux como en el LocalStorage.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    b. Información sobre los anuncios. El store deberá manejar la obtención de anuncios desde el API, así como la creación y edición de anuncios.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    Será importante modelar correctamente el estado que se va a guardar en el store.
 
-## Learn More
+2. Crear las acciones y reducers necesarios para poder cumplir los objetivos del punto 1.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Configurar Redux Dev Tools para simplificar las tareas de debugging de la aplicación.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. Formularios. La aplicación contiene varios formularios (Registro, Profile, Creación/Edición de anuncios). Estaría bien extraer lógica común a todos ellos y reutilizarlos en los disintos formularios, por ejemplo creando un componente \<Form /> que mantenga los valores del formulario y un \<Input /> que reciba el valor que le corresponde así como la función necesaria para poder modificar ese valor en el evento onChange. De ese modo, toda la lógica del onChange estará “escondida” en los components Form e Input. La idea es que luego en el momento de usar estos components se pueda hacer así (ejemplo para el Registro).
 
-### Code Splitting
+    ```shell
+    <Form initialValue = {{ username: ‘’, password: ‘’ }} onSubmit = { … } > 
+        <Input type ="text" name="username" /> 
+        <Input type ="password" name="password" /> 
+    </Form>
+    ```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+    Podeis usar cualquiera de las técnicas que hemos visto en el curso (hoc, hooks, renderProps, context, etc). Con aplicarlo en algún formulario (Registro, por ejemplo) será suficiente.
 
-### Analyzing the Bundle Size
+5. Refactorizar algún componenente para que use hooks, por ejemplo gestionando su estado con useState o sus efectos con useEffect.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+6. Testing. Crear tests unitarios, dando al menos un ejemplo de cada uno de estos casos.
 
-### Making a Progressive Web App
+    a. Una acción síncrona.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+    b. Una acción asíncrona.
 
-### Advanced Configuration
+    c. Un reducer.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+    d. Un selector.
 
-### Deployment
+    e. Un componente con snapshot testing.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+    f. Comprobar el funcionamiento de un componente que ejecuta una acción del store, mockeando la acción.

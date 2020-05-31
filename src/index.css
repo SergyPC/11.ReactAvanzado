@@ -52,6 +52,13 @@ main {
   width: 500px;
 }
 
+.hijo-logIn-SignUp2 {
+  width: 500px;
+  background-color: lightgray ;
+  border-radius: 15px;
+  padding:15px;
+}
+
 .centrado {
   text-align: center;
 }

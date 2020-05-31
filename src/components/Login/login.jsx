@@ -1,135 +1,57 @@
-import React, { Component } from 'react';
-// import ReactDOM from 'react-dom'
-// import axios from 'axios';
-//import { BrowserRouter as Router, Route, Link, Switch, withRouter, Redirect } from 'react-router-dom';
+import React from 'react';
 import { userLogin } from '../../js/api.js';
-import { Card, InputGroup, Form, Button }  from 'react-bootstrap';
-import Navbarr from '../Navbar/navbar';
-import login from '../../img/login.png'
-import contrasena from '../../img/password.png'
+import { Card, Button }  from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
+import { Form, Input } from '../FormProvider/FormProvider';
 
-export default class Register extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '' ,
-            password: ''
-        };
-    };
-
-    handleClickButton = () => {
-        this.setState({
-            username: '',
-            password: ''
-        });
-    };
-
-    handleChageUsername = (event) => {
-        this.setState({
-            username: event.target.value
-        });
-    };
-
-    handleChangePassword = (event) => {
-        this.setState({
-            password: event.target.value
-        });
-    };
-
-    getLogin = async (event) => {
-        event.preventDefault();
-        const { username, password } = this.state;
-
-        // try {
-        //     const response = await userLogin(username, password);
-        //     //response ? this.props.history.push("/adsBoard") : console.log("error login")
-        //     //console.log('Redireccionamos a adsBoard');
-        //     //this.props.history.push('/adsBoard');
-        // } catch (error) {
-        //     console.error(`The user name, ${this.state.username}, doesn't exist (${error}).`);
-        //     alert(`The user name, ${this.state.username}, doesn't exist.`);
-        // }
-              
-        const isLoginCorrect = await userLogin(username, password);
-
-        // console.log("isLoginCorrect.success:", isLoginCorrect.success);
-        // console.log("isLoginCorrect.error:", isLoginCorrect.error);
-
-        isLoginCorrect.error ? alert(`The username, ${this.state.username}, doesn't exist.`) : this.props.history.push('/adsBoard');
-
-        // if (isLoginCorrect.error) {
-        //     alert(`The user name, ${this.state.username}, doesn't exist.`);
-        // } else {
-        //     this.props.history.push('/adsBoard');
-        // }
-
+export default function Login (props) {
+    const onSubmit = async (data) => {
+        try {
+            const isLoginCorrect = await userLogin(data.username, data.password);
+            if(!isLoginCorrect.error) {
+                sessionStorage.setItem("UserLogged", true);
+                props.userLogin();
+                props.history.push("/adsBoard");
+                return;
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `The username or the password don't exist or are incorrect.`,
+                //footer: '<a href>Why do I have this issue?</a>'
+                //showConfirmButton: false,
+                timer: 3500
+            });
+            //alert(`The username, ${data.username}, doesn't exist.`);
+            //alert(`The username, ${data.username}, or the password, ${data.password}, don't exist or are incorrect.`);
+        } catch (error) {
+            //console.error(`The username, ${data.username}, or the password, ${data.password}, don't exist or are incorrect.`);
+            console.error(`The username or the password don't exist or are incorrect.`);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: `The username or the password don't exist or are incorrect.`,
+                //footer: '<a href>Why do I have this issue?</a>'
+                //showConfirmButton: false,
+                timer: 3500
+            });
+            //alert(`The username, ${data.username}, doesn't exist.`);
+            //alert(`The username, ${data.username}, or the password, ${data.password}, don't exist or are incorrect.`);
+        }
     }
 
-    render = () => {
-        const {username, password} = this.state;
-
-        return (
-            <div className='padre-logIn-SignUp'>
-            <div className='hijo-logIn-SignUp'>
-                
-                {/* <Navbarr params={this.state} /> */}
-                <Navbarr />
-
-                <form onSubmit={this.getLogin}>
-                <Form.Group >
-                <Card key='1'>
-                    {/* <Card.Img variant="top" src={photo} /> */}
-                    <Card.Body>
-                        <Card.Title className='centrado'>Log in to your account</Card.Title>
-                        <Card.Text>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="logintext"><Card.Img variant="top" src={login} /></InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control type="text"
-                                placeholder="Enter Username"
-                                // value= {this.state.params.name}
-                                value= {username}
-                                name="username"
-                                onChange={this.handleChageUsername}
-                                required 
-                            />
-                        </InputGroup>
-                        <InputGroup className="mb-3">
-                            <InputGroup.Prepend>
-                                <InputGroup.Text id="contrasenatext"><Card.Img variant="top" src={contrasena} /></InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <Form.Control type="password"
-                                placeholder="Enter Password"
-                                // value= {this.state.params.name}
-                                value= {password}
-                                name="password"
-                                onChange={this.handleChangePassword}
-                                required 
-                            />
-                        </InputGroup>
-                        <InputGroup className="mb-3">
-                            <Button type="submit" variant="primary" size="lg" block>
-                                Log In
-                            </Button>
-                            <Button variant="warning" size="lg" block onClick={this.handleClickButton}>
-                                Clear
-                            </Button>   
-                        </InputGroup>
-                        
-                        </Card.Text>
-                    </Card.Body>
-                    <Card.Footer className='centrado'>
-                        <normal className="text-muted">New to WallaKeep?</normal>
-                        &nbsp;
-                        <Card.Link href="/register">Sign Up{/* Go to register */}</Card.Link>
-                        {/* <small className="text-muted">New to GUAGUAPOP? Sign Up</small> */}
-                    </Card.Footer>
-                </Card>
-                </Form.Group>
-                </form>
+    return (
+        <div className='padre-logIn-SignUp'>
+            <div className='hijo-logIn-SignUp2'>
+                <Card.Title className='centrado'>Log in to your account</Card.Title>
+                <Form onSubmit = {onSubmit}>
+                    <Input type="text" name="username" placeholder="Enter Username" />
+                    <Input type="password" name="password" placeholder="Enter Password" /> 
+                    <Button variant="primary" type="submit" style={{width: '100%', marginTop: '10px', fontWeight: 'bold'}}>Log In</Button>
+                </Form>
+                <p align="center" style={{width: '100%', marginTop: '25px'}}>New to WallaKeep? <Link to={`/register`}><strong>Sign Up</strong></Link></p>
             </div>
-            </div>
-        );
-    };
+        </div>
+    )
 }
